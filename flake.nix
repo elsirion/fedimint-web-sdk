@@ -26,11 +26,15 @@
               pkgs.nodejs_20
               # The version of playwright in nixpkgs has to match the verison specified in package.json
               pkgs.playwright-driver.browsers
+              pkgs.dbus.lib
             ] ++ prev.nativeBuildInputs;
 
             shellHook = ''
               export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
               export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+              # Launch temporary DBUS session
+              eval $(dbus-launch --sh-syntax)
+              echo "DBUS: $DBUS_SESSION_BUS_ADDRESS"
             '';
           });
         };
